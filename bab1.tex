@@ -1,0 +1,89 @@
+%!TEX root = ./template-skripsi.tex
+%-------------------------------------------------------------------------------
+% 								BAB I
+% 							LATAR BELAKANG
+%-------------------------------------------------------------------------------
+
+\chapter{LATAR BELAKANG}
+
+\section{Latar Belakang Masalah}
+Saat ini, perkembangan teknologi sangatlah cepat, terlebih dengan adanya revolusi industri 4.0. Dengan perkembangan yang cepat itu kebutuhan akan perangkat lunak pun semakin banyak dan semakin kompleks. Menurut State of the Developer Nation report pada edisi 20 terdapat 24.3 juta pengembang perangkat lunak di seluruh dunia yang akan meningkat 20\% setiap tahunnya dan diperkirakan pada tahun 2030 akan ada 45 juta pengembang perangkat lunak\cite{DeveloperReport}. Hal tersebut menggambarkan betapa tingginya demand untuk pembuatan perangkat lunak. Perkembangan seperti ini membuat beberapa konsep dan cara pengembangan perangkat lunak yang sebelumnya dipakai menjadi tidak relevan karena kebutuhan perangkat lunak yang semakin banyak dan kompleks. Salah satunya adalah arsitektur monolith pada perangkat lunak, dimana sebuah perangkat lunak dibangun sebagai satu kesatuan utuh. Pada arsitektur monolith tiap bagian perangkat lunak terikat dengan erat (\emph{tightly coupled}) sehingga ketika aplikasi sudah begitu besar akan sangat sulit untuk melakukan perubahan karena ada kemungkinan perubahan tersebut berdampak pada bagian lain di perangkat lunak. Hal ini berdampak pada waktu pengembangan yang lebih lambat, karena para pengembang harus menguji dan \emph{deploy} seluruh aplikasi setiap kali terjadi perubahan.
+
+Permasalahan yang umum terjadi pada arsitektur monolith coba diselesaikan oleh arsitektur microservices. Microservices merupakan salah satu jenis arsitektur perangkat lunak yang sedang populer belakangan ini. microservices membagi perangkat lunak menjadi beberapa bagian yang lebih kecil yang disebut servis. Masing-masing servis berjalan secara terpisah independen berdasarkan domain bisnisnya. Arsitektur microservices hadir untuk menyelesaikan masalah atau limitasi pada arsitektur tradisional monolith yang diantaranya kemudahan dalam proses-proses maintainability, reusability, scalability, availability, dan automated deployment.
+
+Meskipun arsitektur miroservices menyelesaikan banyak permasalahan yang ada pada arsitektur monolith, terdapat masalah dan tantangan baru pada bagian monitoring dan memahami keseluruhan sistem secara utuh. Dikarenakan jumlah servis yang banyak dan tiap servis terdistribusi secara independen, cukup sulit untuk melacak aliran data dan mengetahui bagian yang bermasalah atau menjadi \emph{bottle-neck} pada sistem. Karena hal tersebutlah observability ada.
+
+Secara sederhana observability merujuk pada kemampuan untuk mengetahui apa yang terjadi (\emph{internal state}) pada sebuah sistem, tidak peduli betapa simpel atau kompleksnya sistem tersebut berdasarkan keluaran yang dihasilkan. dengan kata lain, observability memungkinkan pengembang untuk mengetahui dan menganalisa perilaku dan keadaan dari sistem yang terdistribusi melalui berbagai macam data telemetri yang dikumpulkan.Dengan menerapkan observability pada sebuah sistem microservices yang terdistribusi, para pengembang dapat mengetahui bagaimana antar service berkomunikasi dan berinteraksi sehingga dapat mengatasi masalah yang terjadi atau yang mungkin terjadi pada sistem. Sebagai contoh, pengembang dapat dengan mudah mengidentifikasi bagian mana yang lambat pada sistem sehingga dapat segera dioptimalkan.
+
+Pada penulisan skripsi kali ini, penulis akan mengembangkan suatu sistem penerapan observability pada sebuah sistem microservices berdasar pada 3 pilar observability yaitu metrics, traces, dan logs.
+
+\section{Rumusan Masalah}
+Berdasarkan latar belakang yang telah dituliskan sebelumnya, terdapat masalah dan tantangan dalam upaya mengetahui keadaan internal suatu sistem perangkat lunak berbasis microservices. Masalah tersebut muncul karena arsitektur microservices membagi sistem menjadi bagian-bagian yang lebih kecil yang secara alamiah akan membuat sistem perangkat lunak menjadi lebih kompleks. Permasalahan yang muncul pada arsitektur microservices terkait upaya mengetahui keadaan internal sistem terebut diantaranya adalah:
+\begin{enumerate}
+\item Bagaimana cara untuk mengembangkan tools monitoring yang dapat meningkatkan observability pada sistem microservices?
+\item Bagaimana cara mengumpulkan data telemetri dari masing-masing servis yang terdistribusi secara independen dan memiliki teknologi yang berbeda-beda?
+\item Apakah tools monitoring yang dikembangkan tidak mempengaruhi performa dari sistem microservices?
+\end{enumerate}
+
+
+\section{Batasan Masalah}
+Batasan masalah pada penelitian ini adalah:
+\begin{enumerate}
+\item Objek penelitian: Pengembangan tools monitoring untuk meningkatkan observability pada sistem microservices dengan menggunakan 3 pilar observability yaitu metrics, traces, dan logs. Tools yang dikembangkan dapat berjalan pada berbagai macam teknologi yang berbeda dan tidak mempengaruhi performa servis.
+\item Metode penelitian: Pengembangan tools monitoring dilakukan dengan eksperimen bagaimana cara mengumpulkan data telemetri yang ada pada masing-masing servis dan kemudian data tersebut dijadikan satu kesatuan sistem monitoring. Hasil dari penelitian ini adalah tools monitoring yang dapat meningkatkan observability pada sistem microservices.
+\item Waktu dan tempat penelitian: Waktu penelitian dari February 2023 – Juni 2023, di rumah peneliti
+\item Variabel: Variabel bebas meliputi pemilihan teknologi yang dapat digunakan untuk mengembangkan tools monitoring, serta bagaimana mengumpulkan data telemetri dari masing-masing servis. Variabel terikat meliputi bagaimana tools tersebut mempengaruhi performa dari sistem microservices, serta bagaimana cara mengembangkan tools monitoring yang dapat meningkatkan observability pada sistem microservices.
+\item Hipotesis: Memanfaatkan log, metrics, dan traces dalam memonitoring microservices dapat meningkatkan kemampuan dalam mengetahui internal sistem, debugging, dan proses pemecahan masalah yang lebih efisien.
+\item Keterbatasan penelitian:
+\begin{itemize}
+\item Sistem microservices yang digunakan pada penelitian memiliki jumlah 6 service dengan dua bahasa pemrograman yaitu Go dan NodeJs.
+\item Semua servis yang digunakan pada penelitian ini berjalan pada docker container.
+\item Microservices yang dgunakan pada penelitian ini berjalan pada dua buah server host yang berbeda.
+\item Penelitian ini tidak membahas bagaimana cara debugging menggunakan tools monitoring yang dikembangkan.
+\item Penelitian ini hanya membahas observability secara teknikal dan tidak membahas observability secara organisasi.
+\end{itemize}
+\end{enumerate}
+
+
+\section{Tujuan Penelitian}
+Penelitian yang dilakukan bertujuan untuk mengembangkan tools monitoring yang dapat meningkatkan observability pada sistem microservices dengan menggabungkan berbagai macam teknologi yang berbeda-beda. 
+
+\section{Manfaat Penelitian}
+Manfaat dari penelitian ini adalah:
+\begin{enumerate}
+\item Bagi praktisi pengembang perangkat lunak, penelitian ini dapat dijadikan dasar untuk pembuatan tools monitoring untuk mengetahui keadaan internal dari sistem microservices.
+\item Bagi penulis, penelitian ini dapan menambah wawasan, ilmu dan pengetahuan dalam pembuatan tulisan ilmiah, khususnya pada topik terkait monitoring pada sistem perangkat lunak modern.
+\item Bagi pelaku bisnis, penerapan observability dapat meningkatkan customer experience.\\
+\end{enumerate}
+
+\section{Sistematika Penulisan}
+\noindent
+\textbf{BAB I : PENDAHULUAN}
+
+Pada bab ini dijelaskan latar belakang, rumusan masalah, batasan, tujuan, manfaat, keaslian penelitian, dan sistematika penulisan.\\
+
+\noindent
+\textbf{BAB II : TINJAUAN PUSTAKA DAN LANDASAN TEORI}
+Bab tersebut berisi tentang hasil-hasil penelitian yang telah dilakukan oleh para peneliti sebelumnya yang dapat ditemukan dalam tinjauan pustaka, serta teori-teori yang mendukung penelitian yang terdapat pada dasar teori dan analisis perbandingan metode dari penelitian sebelumnya.\\
+
+\noindent
+\textbf{BAB III : METODOLOGI PENELITIAN}
+
+Bab tersebut membahas mengenai rincian mengenai alat dan bahan yang digunakan dalam penelitian, seperti perangkat keras dan perangkat lunak yang digunakan. Selain itu, dijelaskan pula mengenai metode yang digunakan dalam penelitian. Bab tersebut juga membahas mengenai alur penelitian, yaitu tahapan-tahapan yang dilakukan dalam penelitian untuk mencapai tujuan yang telah ditetapkan.\\
+
+\noindent
+\textbf{BAB IV : HASIL DAN PEMBAHASAN}
+
+Pada bab ini dijelaskan hasil penelitian dan pembahasannya.\\
+
+\noindent
+\textbf{BAB V : KESIMPULAN DAN SARAN}
+
+Bab ini berisi kesimpulan yang diperoleh dari penelitian yang telah dilakukan. Selain itu, bab ini juga memuat saran-saran untuk pengembangan penelitian selanjutnya berdasarkan hasil temuan yang didapatkan dari penelitian yang telah dilakukan.\\
+
+% Baris ini digunakan untuk membantu dalam melakukan sitasi
+% Karena diapit dengan comment, maka baris ini akan diabaikan
+% oleh compiler LaTeX.
+\begin{comment}
+\bibliography{daftar-pustaka}
+\end{comment}
