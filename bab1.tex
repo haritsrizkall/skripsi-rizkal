@@ -11,42 +11,51 @@ Saat ini, perkembangan teknologi sangatlah cepat, terlebih dengan adanya revolus
 
 Permasalahan yang umum terjadi pada arsitektur monolith coba diselesaikan oleh arsitektur microservices. Microservices merupakan salah satu jenis arsitektur perangkat lunak yang sedang populer belakangan ini. microservices membagi perangkat lunak menjadi beberapa bagian yang lebih kecil yang disebut servis. Masing-masing servis berjalan secara terpisah independen berdasarkan domain bisnisnya. Arsitektur microservices hadir untuk menyelesaikan masalah atau limitasi pada arsitektur tradisional monolith yang diantaranya kemudahan dalam proses-proses maintainability, reusability, scalability, availability, dan automated deployment.
 
-Meskipun arsitektur miroservices menyelesaikan banyak permasalahan yang ada pada arsitektur monolith, terdapat masalah dan tantangan baru pada bagian monitoring dan memahami keseluruhan sistem secara utuh. Dikarenakan jumlah servis yang banyak dan tiap servis terdistribusi secara independen, cukup sulit untuk melacak aliran data dan mengetahui bagian yang bermasalah atau menjadi \emph{bottle-neck} pada sistem. Karena hal tersebutlah observability ada.
+Meskipun arsitektur miroservices menyelesaikan banyak permasalahan yang ada pada arsitektur monolith, terdapat masalah dan tantangan baru pada bagian monitoring dan memahami keseluruhan sistem secara utuh. Dikarenakan jumlah servis yang banyak dan tiap servis terdistribusi secara independen, cukup sulit untuk melacak aliran data dan mengetahui bagian yang bermasalah atau menjadi \emph{bottle-neck} pada sistem. Karena hal tersebutlah diibutuhkan suatu cara untuk menyelesaikan permasalahan tersebut. Sebagai gambaran, perusahaan streaming online Netflix memiliki lebih dari 1000 microservice\cite{NetflixMicroservices}, sebuah request yang masuk dapat melewati banyak servis sebelum memberikan respon. Jika terjadi masalah pada salah satu servis, maka akan sulit untuk mengetahui bagian mana yang bermasalah karena tidak mungkin seorang pengembang dapat mengetahui perilaku sistem secara keseluruhan. Oleh karena itu, perlu adanya distributed tracing pada sistem microservices.
 
-Secara sederhana observability merujuk pada kemampuan untuk mengetahui apa yang terjadi (\emph{internal state}) pada sebuah sistem, tidak peduli betapa simpel atau kompleksnya sistem tersebut berdasarkan keluaran yang dihasilkan. dengan kata lain, observability memungkinkan pengembang untuk mengetahui dan menganalisa perilaku dan keadaan dari sistem yang terdistribusi melalui berbagai macam data telemetri yang dikumpulkan.Dengan menerapkan observability pada sebuah sistem microservices yang terdistribusi, para pengembang dapat mengetahui bagaimana antar service berkomunikasi dan berinteraksi sehingga dapat mengatasi masalah yang terjadi atau yang mungkin terjadi pada sistem. Sebagai contoh, pengembang dapat dengan mudah mengidentifikasi bagian mana yang lambat pada sistem sehingga dapat segera dioptimalkan.
+Distributed tracing merupakan suatu teknik pada sistem perangkat lunak yang digunakan untuk memantau dan menganalisa aliran sebuah request yang melewati beberapa komponen dalam hal microservices merupakan servis. Distributed tracing membuat pengembang untuk memahami perilaku dan kinerja sistem secara keseluruhan.
 
-Pada penulisan skripsi kali ini, penulis akan mengembangkan suatu sistem penerapan observability pada sebuah sistem microservices berdasar pada 3 pilar observability yaitu metrics, traces, dan logs.
+Pada penelitian kali ini, akan dilakukan implementasi dan analisis distributed tracing pada sistem microservices. Hasil dari penelitian ini diharapkan dapat dijadikan acuan dan pertimbangan dalam melakukan implementasi distributed tracing pada sistem microservices.
 
 \section{Rumusan Masalah}
 Berdasarkan latar belakang yang telah dituliskan sebelumnya, terdapat masalah dan tantangan dalam upaya mengetahui keadaan internal suatu sistem perangkat lunak berbasis microservices. Masalah tersebut muncul karena arsitektur microservices membagi sistem menjadi bagian-bagian yang lebih kecil yang secara alamiah akan membuat sistem perangkat lunak menjadi lebih kompleks. Permasalahan yang muncul pada arsitektur microservices terkait upaya mengetahui keadaan internal sistem terebut diantaranya adalah:
 \begin{enumerate}
-\item Bagaimana cara untuk mengembangkan tools monitoring yang dapat meningkatkan observability pada sistem microservices?
-\item Bagaimana cara mengumpulkan data telemetri dari masing-masing servis yang terdistribusi secara independen dan memiliki teknologi yang berbeda-beda?
-\item Apakah tools monitoring yang dikembangkan tidak mempengaruhi performa dari sistem microservices?
+\item Apakah metode distributed tracing dapat mengetahui aliran request pada sebuah sistem microservices?
+\item Apakah metode distributed tracing dapat membantu dalam deteksi error dan bottle-neck pada sebuah sistem microservices?
+\item Bagaimana menerapkan distributed tracing pada sistem microservices yang memiliki teknologi yang berbeda-beda?
+\item Bagaimana distributed tracing dapat membantu dalam proses monitoring dan debugging pada sistem microservices?
+\item Bagaimana dampak dari penerapan distributed tracing terhadap performa dari sistem microservices?
 \end{enumerate}
-
-
-\section{Batasan Masalah}
-Batasan masalah pada penelitian ini adalah:
-\begin{enumerate}
-\item Objek penelitian: Pengembangan tools monitoring untuk meningkatkan observability pada sistem microservices dengan menggunakan 3 pilar observability yaitu metrics, traces, dan logs. Tools yang dikembangkan dapat berjalan pada berbagai macam teknologi yang berbeda dan tidak mempengaruhi performa servis.
-\item Metode penelitian: Pengembangan tools monitoring dilakukan dengan eksperimen bagaimana cara mengumpulkan data telemetri yang ada pada masing-masing servis dan kemudian data tersebut dijadikan satu kesatuan sistem monitoring. Hasil dari penelitian ini adalah tools monitoring yang dapat meningkatkan observability pada sistem microservices.
-\item Waktu dan tempat penelitian: Waktu penelitian dari February 2023 – Juni 2023, di rumah peneliti
-\item Variabel: Variabel bebas meliputi pemilihan teknologi yang dapat digunakan untuk mengembangkan tools monitoring, serta bagaimana mengumpulkan data telemetri dari masing-masing servis. Variabel terikat meliputi bagaimana tools tersebut mempengaruhi performa dari sistem microservices, serta bagaimana cara mengembangkan tools monitoring yang dapat meningkatkan observability pada sistem microservices.
-\item Hipotesis: Memanfaatkan log, metrics, dan traces dalam memonitoring microservices dapat meningkatkan kemampuan dalam mengetahui internal sistem, debugging, dan proses pemecahan masalah yang lebih efisien.
-\item Keterbatasan penelitian:
-\begin{itemize}
-\item Sistem microservices yang digunakan pada penelitian memiliki jumlah 6 service dengan dua bahasa pemrograman yaitu Go dan NodeJs.
-\item Semua servis yang digunakan pada penelitian ini berjalan pada docker container.
-\item Microservices yang dgunakan pada penelitian ini berjalan pada dua buah server host yang berbeda.
-\item Penelitian ini tidak membahas bagaimana cara debugging menggunakan tools monitoring yang dikembangkan.
-\item Penelitian ini hanya membahas observability secara teknikal dan tidak membahas observability secara organisasi.
-\end{itemize}
-\end{enumerate}
-
 
 \section{Tujuan Penelitian}
-Penelitian yang dilakukan bertujuan untuk mengembangkan tools monitoring yang dapat meningkatkan observability pada sistem microservices dengan menggabungkan berbagai macam teknologi yang berbeda-beda. 
+Penelitian ini bertujuan untuk mengetahui efektivitas dari implementasi distributed tracing dalam deteksi error dan bottle-neck pada sistem microservices serta dampak implementasi tersebut terhadap kesluruhan performa sistem.
+
+\section{Batasan Penelitian}
+Batasan penelitian ini adalah:
+\begin{enumerate}
+\item Fokus penelitian ini adalah pada penerapan distributed tracing pada sistem microservices dalam mendeteksi error yang terjadi pada sistem microservices serta dampak dari penerapan distributed tracing terhadap performa dari sistem microservices.
+\item Sistem microservices yang digunakan menggunakan dua bahasa pemrograman yang berbeda yaitu Javascript dan Go.
+\item Sistem microservices yang digunakan menggunakan dua sistem basis data yang berbeda yaitu Postgresql dan MySQL.
+\item Semua tools yang digunakan pada penelitian ini merupakan open source.
+\item Sistem microservices yang digunakan pada penelitian ini berjalan pada kubernetes dengan 1 node master dan 2 node worker.
+\end{enumerate}
+
+
+% \section{Batasan Masalah}
+% Batasan masalah pada penelitian ini adalah:
+% \begin{enumerate}
+% \item Objek penelitian: Penerapan dan analisis distributed tracing pada sistem microservices
+% \item Metode penelitian: Penerapan distributed tracing dilakukan dengan melakukan eksperimen pada sebuah sistem microservices yang memiliki teknologi yang berbeda-beda. Hasil dari penelitian ini adalah mengetahui efektivitas dari penerapan distributed tracing pada sistem microservices serta dampak dari penerapan distributed tracing terhadap performa dari sistem microservices.
+% \item Waktu dan tempat penelitian: Waktu penelitian dari February 2023 – Juni 2023, di rumah peneliti
+% \item Variabel: Variabel bebas pada penelitian ini adalah metode dan teknologi yang digunakan untuk penerapan distributed tracing. Sementara itu, variabel terikat pada penelitian ini adalah efektivitas dari penerapan distributed tracing pada sistem microservices serta dampak dari penerapan distributed tracing terhadap performa dari sistem microservices.
+% \item Hipotesis: Distributed tracing dapat dengan efektif mendeteksi kesalahan serta anomali pada sistem microservices.
+% \item Keterbatasan penelitian:
+% \begin{itemize}
+% \item Sistem microservices yang digunakan pada penelitian memiliki jumlah 6 service dengan dua bahasa pemrograman yaitu Go dan NodeJs.
+% \item Sistem microservices yang digunakan pada penelitian ini menggunakan 2 database yaitu Postgresql dan MySQL.
+% \item Semua servis yang digunakan pada penelitian ini berjalan pada docker container.
+% \end{itemize}
+% \end{enumerate}
 
 \section{Manfaat Penelitian}
 Manfaat dari penelitian ini adalah:
